@@ -1,0 +1,31 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+qa:
+  image: php:${PHP_VERSION}-cli
+  parallel:
+    matrix:
+      - PHP_VERSION:
+          - '8.4'
+          - '8.5'
+  variables:
+    COMPOSER_CACHE_DIR: $CI_PROJECT_DIR/.composer-cache
+  cache:
+    key:
+      prefix: composer-${PHP_VERSION}
+      files:
+        - composer.lock
+    paths:
+      - .composer-cache
+  before_script:
+    - apt-get update -yqq && apt-get install -yqq git unzip
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --no-interaction --no-progress --prefer-dist
+  script:
+    - vendor/bin/rector process --dry-run
+    - vendor/bin/pint --test
+    - composer analyze
+    - composer dump-autoload --strict-psr --optimize --dry-run
+    - composer test

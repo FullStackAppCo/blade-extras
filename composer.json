@@ -1,0 +1,80 @@
+{
+  "$schema": "https://getcomposer.org/schema.json",
+  "version": "0.1.0",
+  "name": "fsac/blade-extras",
+  "description": "Additional Blade utilities for Laravel",
+  "keywords": [
+    "laravel",
+    "blade"
+  ],
+  "homepage": "https://gitlab.com/fullstackappco/blade-extras",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Joby Harding",
+      "email": "code@fullstackappco.com",
+      "role": "Developer"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://gitlab.com/fullstackappco/rector-extras"
+    }
+  ],
+  "require": {
+    "php": "^8.4",
+    "ext-dom": "*",
+    "illuminate/support": "^12.0||^13.0",
+    "masterminds/html5": "^2.11"
+  },
+  "require-dev": {
+    "fsac/rector-extras": "0.1.1",
+    "laravel/pint": "^1.30",
+    "orchestra/testbench": "^10.0||^11.0",
+    "phpunit/phpunit": "^13.0",
+    "rector/rector": "^2.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "FullStackAppCo\\BladeExtras\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "FullStackAppCo\\BladeExtras\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [],
+    "post-install-cmd": [
+      "git config core.hooksPath .githooks || true"
+    ],
+    "analyze": [
+      "@php vendor/bin/phpstan analyse"
+    ],
+    "format": [
+      "@php vendor/bin/pint"
+    ],
+    "refactor": [
+      "@php vendor/bin/rector process"
+    ],
+    "test": [
+      "@php vendor/bin/phpunit -d memory_limit=2G"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [],
+      "aliases": {}
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "phpstan/extension-installer": true
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

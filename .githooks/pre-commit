@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Collect staged PHP files (Added, Copied, Modified — deletions are skipped).
+STAGED_FILES=()
+while IFS= read -r file; do
+    STAGED_FILES+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACM -- '*.php')
+
+if [ ${#STAGED_FILES[@]} -eq 0 ]; then
+    exit 0
+fi
+
+echo "→ refactor (${#STAGED_FILES[@]} changed PHP file(s))"
+composer refactor -- "${STAGED_FILES[@]}"
+
+echo "→ format"
+composer format -- "${STAGED_FILES[@]}"
+
+# Re-stage anything Rector or Pint rewrote so the fixes are part of the commit
+# and analyze sees the final code.
+git add -- "${STAGED_FILES[@]}"
+
+echo "→ analyze"
+composer analyze
+
+composer dump-autoload --strict-psr --optimize --dry-run

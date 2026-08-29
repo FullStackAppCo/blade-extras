@@ -1,0 +1,13 @@
+<?php
+
+namespace Illuminate\Testing;
+
+/**
+ * @method $this assertXPathCount(string $expression, int $count, ?string $message = null)
+ * @method $this assertXPathSingle(string $expression)
+ * @method $this assertXPathMissing(string $expression)
+ * @method $this assertXPath(string $expression, callable $callback)
+ */
+class TestView
+{
+}

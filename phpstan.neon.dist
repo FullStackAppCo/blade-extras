@@ -6,6 +6,9 @@ parameters:
         - src/
         - tests/
 
+    stubFiles:
+        - stubs/TestView.stub
+
     # Level 10 is the highest level
     level: 5
 

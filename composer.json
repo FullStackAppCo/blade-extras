@@ -53,6 +53,10 @@
     "analyze": [
       "@php vendor/bin/phpstan analyse"
     ],
+    "coverage": [
+      "@php -d pcov.enabled=1 -d xdebug.mode=coverage vendor/bin/phpunit -d memory_limit=2G --colors=never --coverage-text --coverage-cobertura=.phpunit.cache/cobertura.xml",
+      "@php ./bin/check-coverage"
+    ],
     "format": [
       "@php vendor/bin/pint"
     ],

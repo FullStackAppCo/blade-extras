@@ -21,6 +21,7 @@ qa:
       - .composer-cache
   before_script:
     - apt-get update -yqq && apt-get install -yqq git unzip
+    - pecl install pcov && docker-php-ext-enable pcov
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - composer install --no-interaction --no-progress --prefer-dist
   script:
@@ -28,4 +29,11 @@ qa:
     - vendor/bin/pint --test
     - composer analyze
     - composer dump-autoload --strict-psr --optimize --dry-run
-    - composer test
+    - composer coverage
+  # Parsed from the --coverage-text summary for the MR coverage widget.
+  coverage: '/^\s*Lines:\s*(\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: .phpunit.cache/cobertura.xml

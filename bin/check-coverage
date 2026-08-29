@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * Fail when overall line coverage in a Cobertura report is below a threshold.
+ *
+ * Usage: bin/check-coverage [min-percent] [report-path]
+ *   min-percent  defaults to $MIN_COVERAGE or 90
+ *   report-path  defaults to .phpunit.cache/cobertura.xml
+ */
+
+$min = (float) ($argv[1] ?? getenv('MIN_COVERAGE') ?: 95);
+$report = $argv[2] ?? dirname(__DIR__).'/.phpunit.cache/cobertura.xml';
+
+if (! is_file($report)) {
+    fwrite(STDERR, "Coverage report not found: {$report}\nRun `composer coverage` first.\n");
+    exit(1);
+}
+
+$xml = simplexml_load_file($report);
+
+if ($xml === false || ! isset($xml['lines-valid'])) {
+    fwrite(STDERR, "Could not parse Cobertura report: {$report}\n");
+    exit(1);
+}
+
+$covered = (int) $xml['lines-covered'];
+$valid = (int) $xml['lines-valid'];
+$percent = $valid === 0 ? 0.0 : ($covered / $valid) * 100;
+
+printf("Line coverage: %.2f%% (%d/%d), minimum %.2f%%\n", $percent, $covered, $valid, $min);
+
+if ($percent < $min) {
+    fwrite(STDERR, sprintf("Coverage %.2f%% is below the required %.2f%%.\n", $percent, $min));
+    exit(1);
+}

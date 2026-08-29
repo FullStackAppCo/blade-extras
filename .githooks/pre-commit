@@ -26,3 +26,11 @@ echo "→ analyze"
 composer analyze
 
 composer dump-autoload --strict-psr --optimize --dry-run
+
+# Run the test suite with coverage and fail below the minimum (see bin/check-coverage).
+if php -m | grep -qiE '^(pcov|xdebug)$'; then
+    echo "→ coverage"
+    composer coverage
+else
+    echo "⚠ no coverage driver (pcov/xdebug) loaded — skipping coverage check"
+fi

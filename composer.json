@@ -29,7 +29,7 @@
     "masterminds/html5": "^2.11"
   },
   "require-dev": {
-    "fsac/rector-extras": "0.1.1",
+    "fsac/rector-extras": "0.1.5",
     "laravel/pint": "^1.30",
     "orchestra/testbench": "^10.0||^11.0",
     "phpunit/phpunit": "^13.0",
